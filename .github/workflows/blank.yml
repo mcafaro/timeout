@@ -14,7 +14,7 @@ jobs:
         with:
           command: |
             % Set up timer to kill MATLAB
-            t = timer('TimerFcn', @(~,~)system(sprintf("taskkill /pid %d /f", feature('getpid'))), 'StartDelay', 30);
+            t = timer('TimerFcn', @(~,~)disp('hello'), 'StartDelay', 30);
             start(t);
             pause(60);
       - name: Failure

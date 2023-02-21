@@ -19,6 +19,8 @@ jobs:
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    
+    timeout-minutes: 1
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -28,12 +30,11 @@ jobs:
       # Runs a single command using the runners shell
       - name: Timeout
         run: sleep 2m
-        timeout-minutes: 1
         
       - name: cancelled
-        if: ${{ cancelled() }}
+        if: cancelled()
         run: echo cancelled
         
       - name: failure
-        if: ${{ failure() }}
+        if: failure()
         run: echo failure

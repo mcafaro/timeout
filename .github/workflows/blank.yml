@@ -17,6 +17,8 @@ jobs:
             t = timer('TimerFcn', @(~,~)system(sprintf("taskkill /pid %d /f", feature('getpid'))), 'StartDelay', 30);
             start(t);
             pause(60);
-      - name: Marker
-        if: failed()
-        run: echo here
+      - name: Failure
+        if: failure()
+        run: echo failure
+      - name: Succeed
+        run: echo succeed

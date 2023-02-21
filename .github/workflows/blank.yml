@@ -1,39 +1,22 @@
-# This is a basic workflow to help you get started with Actions
-
-name: CI
-
-# Controls when the workflow will run
-on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+name: Run MATLAB
+on: [push]
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-latest
-
-    # Steps represent a sequence of tasks that will be executed as part of the job
+  my-job:
+    name: Run MATLAB
+    runs-on: windows-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Timeout
-        run: sleep 2m
-        timeout-minutes: 1
-        
-      - name: cancelled
-        if: cancelled()
-        run: echo cancelled
-        
-      - name: failure
-        if: failure()
-        run: echo failure
+      - name: Check out repository
+        uses: actions/checkout@v3
+      - name: Setup MATLAB
+        uses: matlab-actions/setup-matlab@v1
+      - name: Run script
+        uses: matlab-actions/run-command@v1
+        with:
+          command: |
+            % Set up timer to kill MATLAB
+            t = timer('TimerFcn', @(~,~)system(sprintf("taskkill /pid %d /f", feature('getpid'))), 'StartDelay', 30);
+            start(t);
+            pause(60);
+      - name: Marker
+        if: failed()
+        run: echo here
